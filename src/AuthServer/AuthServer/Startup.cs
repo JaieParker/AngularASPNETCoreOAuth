@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using System;
 using System.Net;
  
 
@@ -40,14 +41,15 @@ namespace AuthServer
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
                 // this adds the operational data from DB (codes, tokens, consents)
-                .AddOperationalStore(options =>
-                {
-                    options.ConfigureDbContext = builder => builder.UseSqlServer(Configuration.GetConnectionString("Default"));
-                    // this enables automatic token cleanup. this is optional.
-                    options.EnableTokenCleanup = true;
-                    options.TokenCleanupInterval = 30; // interval in seconds
-                })
-                //.AddInMemoryPersistedGrants()
+                // TODO: http://docs.identityserver.io/en/latest/quickstarts/7_entity_framework.html#refentityframeworkquickstart
+                //.AddOperationalStore(options =>
+                //{
+                //    options.ConfigureDbContext = builder => builder.UseSqlServer(Configuration.GetConnectionString("Default"));
+                //    // this enables automatic token cleanup. this is optional.
+                //    options.EnableTokenCleanup = true;
+                //    options.TokenCleanupInterval = 30; // interval in seconds
+                //})
+                .AddInMemoryPersistedGrants()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryClients(Config.GetClients())
@@ -75,6 +77,7 @@ namespace AuthServer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            InitializeDatabase(app);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -119,6 +122,53 @@ namespace AuthServer
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private void InitializeDatabase(IApplicationBuilder app)
+        {
+            using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                try
+                {
+                    var appIdentityDbContext = scope.ServiceProvider.GetService<AppIdentityDbContext>();
+                    appIdentityDbContext.Database.Migrate();
+                }
+                catch (Exception ex)
+                {
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while migrating or initializing the AppIdentityDbContext database.");
+                }
+                //serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+
+                //var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+                //context.Database.Migrate();
+                //if (!context.Clients.Any())
+                //{
+                //    foreach (var client in Config.GetClients())
+                //    {
+                //        context.Clients.Add(client.ToEntity());
+                //    }
+                //    context.SaveChanges();
+                //}
+
+                //if (!context.IdentityResources.Any())
+                //{
+                //    foreach (var resource in Config.GetIdentityResources())
+                //    {
+                //        context.IdentityResources.Add(resource.ToEntity());
+                //    }
+                //    context.SaveChanges();
+                //}
+
+                //if (!context.ApiResources.Any())
+                //{
+                //    foreach (var resource in Config.GetApis())
+                //    {
+                //        context.ApiResources.Add(resource.ToEntity());
+                //    }
+                //    context.SaveChanges();
+                //}
+            }
         }
     }
 }

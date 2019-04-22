@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  spa:
+    ports:
+      - '4200:4200'
+  auth:
+    ports:
+      - '5000:5000'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://auth.server:5000
+      - ConnectionStrings__Default=Server=auth.data;Initial Catalog=euphoria;Persist Security Info=False;User ID=sa;Password=Pass@word1;MultipleActiveResultSets=False;Encrypt=false;TrustServerCertificate=False;
+
+  auth.data:
+    environment:
+      - SA_PASSWORD=Pass@word1
+      - ACCEPT_EULA=Y
+
+  api:
+    ports:
+      - '5050:5050'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://resouce.api:5050

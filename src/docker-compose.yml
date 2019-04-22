@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+
+  spa:
+    container_name: spa.client
+    image: spa.client
+    build:
+      context: .
+      dockerfile: Spa/Dockerfile
+
+  auth:
+    container_name: auth.server
+    image: auth.server
+    build:
+      context: .
+      dockerfile: AuthServer/Dockerfile
+    depends_on:
+      - auth.data
+
+  auth.data:
+    container_name: auth_sql
+    image: auth_sql
+    build:
+      context: ./AuthServer/SqlData
+      dockerfile: Dockerfile
+
+  api:
+    container_name: resouce.api
+    image: resouce.api
+    build:
+      context: .
+      dockerfile: Resource.Api/Dockerfile
+
+  

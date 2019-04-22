@@ -36,9 +36,9 @@ namespace AuthServer
                     ClientName = "Angular SPA",
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowedScopes = { "openid", "profile", "email", "api.read" },
-                    RedirectUris = {"http://localhost:4200/auth-callback"},
-                    PostLogoutRedirectUris = {"http://localhost:4200/"},
-                    AllowedCorsOrigins = {"http://localhost:4200"},
+                    RedirectUris = {"http://spa.client:4200/auth-callback"},
+                    PostLogoutRedirectUris = {"http://spa.client:4200/"},
+                    AllowedCorsOrigins = {"http://spa.client:4200"},
                     AllowAccessTokensViaBrowser = true,
                     AccessTokenLifetime = 3600
                 }

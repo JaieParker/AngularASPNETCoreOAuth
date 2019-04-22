@@ -13,7 +13,8 @@ namespace Resource.Api
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseUrls("http://localhost:5050");
+                .UseStartup<Startup>();
+                // set via build env: ASPNETCORE_URLS=http://*:5050
+                //.UseUrls("http://0.0.0.0:5050");
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Security.Claims;
 
 namespace Resource.Api
@@ -20,13 +21,17 @@ namespace Resource.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // TODO: can this work ?
+            //var environmentUrl = Environment.GetEnvironmentVariable("ASPNETCORE_URLS");
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;                
             }).AddJwtBearer(o =>
             {
-                o.Authority = "http://localhost:5000";
+                //o.Authority = environmentUrl;
+                
+                o.Authority = "http://auth.server:5000";
                 o.Audience = "resourceapi";
                 o.RequireHttpsMetadata = false;
             });
