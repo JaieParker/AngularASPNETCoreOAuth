@@ -24,6 +24,7 @@ Sample project based on <a href="https://fullstackmark.com/post/21/user-authenti
 ::1		          auth.server
 </pre>
 **2** go to src file and type: docker-compose up
+
 **3** watch the magic of docker on http://spa.client:4200
 
 #### To run the demo:
