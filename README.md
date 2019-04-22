@@ -13,6 +13,19 @@ Sample project based on <a href="https://fullstackmark.com/post/21/user-authenti
 
 ## Setup
 
+## Docker setup
+**1** Add the following to your hosts file
+<pre>
+127.0.0.1       spa.client
+::1             spa.client
+::1 		        resouce.api
+127.0.0.1       resouce.api
+127.0.0.1       auth.server
+::1		          auth.server
+</pre>
+**2** go to src file and type: docker-compose up
+**3** watch the magic of docker on http://spa.client:4200
+
 #### To run the demo:
 
 **1.** Clone/Fork/Download this repository.
