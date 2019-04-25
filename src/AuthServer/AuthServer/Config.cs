@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using IdentityServer4.Models;
 
 namespace AuthServer
@@ -28,6 +29,7 @@ namespace AuthServer
 
         public static IEnumerable<Client> GetClients()
         {
+            var spaClientUrl = Environment.GetEnvironmentVariable("SPA_CLIENT_URLS");
             return new[]
             {
                 new Client {
@@ -36,9 +38,10 @@ namespace AuthServer
                     ClientName = "Angular SPA",
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowedScopes = { "openid", "profile", "email", "api.read" },
-                    RedirectUris = {"http://spa.client:4200/auth-callback"},
-                    PostLogoutRedirectUris = {"http://spa.client:4200/"},
-                    AllowedCorsOrigins = {"http://spa.client:4200"},
+                    RedirectUris = { spaClientUrl + "/auth-callback"},
+                    PostLogoutRedirectUris = {spaClientUrl + "/"},
+                    //AllowedCorsOrigins = {"http://spa.client:4200"},
+                    AllowedCorsOrigins = {spaClientUrl},
                     AllowAccessTokensViaBrowser = true,
                     AccessTokenLifetime = 3600
                 }

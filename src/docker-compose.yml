@@ -2,16 +2,16 @@ version: '3.4'
 
 services:
 
-  spa:
+  spa.client:
     container_name: spa.client
-    image: spa.client
+    image: euphoria.spa.client
     build:
       context: .
       dockerfile: Spa/Dockerfile
 
-  auth:
+  auth.server:
     container_name: auth.server
-    image: auth.server
+    image: euphoria.auth.server
     build:
       context: .
       dockerfile: AuthServer/Dockerfile
@@ -19,15 +19,15 @@ services:
       - auth.data
 
   auth.data:
-    container_name: auth_sql
-    image: auth_sql
+    container_name: auth.data
+    image: euphoria.auth.mssql
     build:
       context: ./AuthServer/SqlData
       dockerfile: Dockerfile
 
-  api:
+  resouce.api:
     container_name: resouce.api
-    image: resouce.api
+    image: euphoria.resouce.api
     build:
       context: .
       dockerfile: Resource.Api/Dockerfile

@@ -1,15 +1,21 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
+import * as process from "process";
  
 @Injectable()
 export class ConfigService {    
 
-    constructor() {}
+    constructor() {
+        // "http://auth.server:5000";
+    }
 
     get authApiURI() {
-        return 'http://auth.server:5000/api';
+        var env = process && process.env ? <any>process.env : environment.urls;
+        return env.AUTH_SERVER_URLS + '/api';
     }    
      
     get resourceApiURI() {
-        return 'http://resouce.api:5050/api';
+        var env = process && process.env ? <any>process.env : environment.urls;
+        return env.RESOURCE_API_URLS + '/api';
     }  
 }

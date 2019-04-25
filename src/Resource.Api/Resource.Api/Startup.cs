@@ -22,16 +22,15 @@ namespace Resource.Api
         public void ConfigureServices(IServiceCollection services)
         {
             // TODO: can this work ?
-            //var environmentUrl = Environment.GetEnvironmentVariable("ASPNETCORE_URLS");
+            var authServerUrl = Environment.GetEnvironmentVariable("RESOURCE_API_URLS");
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;                
             }).AddJwtBearer(o =>
             {
-                //o.Authority = environmentUrl;
-                
-                o.Authority = "http://auth.server:5000";
+                o.Authority = authServerUrl;
+                //o.Authority = "http://auth.server:5000";
                 o.Audience = "resourceapi";
                 o.RequireHttpsMetadata = false;
             });

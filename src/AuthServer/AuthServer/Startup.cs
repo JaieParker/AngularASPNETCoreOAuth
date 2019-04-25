@@ -40,6 +40,9 @@ namespace AuthServer
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
+                // TODO
+                //.AddSigningCredential()
+                //.AddDeveloperSigningCredential()
                 // this adds the operational data from DB (codes, tokens, consents)
                 // TODO: http://docs.identityserver.io/en/latest/quickstarts/7_entity_framework.html#refentityframeworkquickstart
                 //.AddOperationalStore(options =>
