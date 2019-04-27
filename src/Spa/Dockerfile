@@ -2,6 +2,7 @@
 FROM nginx:alpine as base
 
 COPY /Spa/nginx.conf /etc/nginx/nginx.conf
+RUN sed -i -e "s/http:\/\/spa.client:4200/${AUTH_SERVER_URLS}/" /etc/nginx/nginx.conf
 
 FROM node:10 as build
 
@@ -32,7 +33,11 @@ RUN npm install -g @angular/cli@1.7.1
 COPY /Spa/oauth-client .
 
 # Need to change the config files to utilise the enviroment vars
+# Hacky but works well
+WORKDIR /app/src/enviroments/
+RUN sed -e "s/http:\/\/auth.server:5000/${AUTH_SERVER_URLS}/" -e "s/http:\/\/resouce.api:5050/${RESOURCE_API_URLS}/" -e "s/http:\/\/spa.client:4200/${SPA_CLIENT_URLS}/" enviroment.ts > enviroment.ts
 
+WORKDIR /app
 ENV SPA_CLIENT_BUILD_COMMAND=build-prod
 # start app
 # CMD ng serve --host 0.0.0.0:4200
