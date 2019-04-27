@@ -31,9 +31,12 @@ RUN npm install -g @angular/cli@1.7.1
 # add app 
 COPY /Spa/oauth-client .
 
+# Need to change the config files to utilise the enviroment vars
+
+ENV SPA_CLIENT_BUILD_COMMAND=build-prod
 # start app
 # CMD ng serve --host 0.0.0.0:4200
-RUN npm run build
+RUN npm run ${SPA_CLIENT_BUILD_COMMAND}
 
 # Final container
 FROM base as client

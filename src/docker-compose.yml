@@ -8,22 +8,24 @@ services:
     build:
       context: .
       dockerfile: Spa/Dockerfile
+    environment:
+      - SPA_CLIENT_URLS=${SPA_CLIENT_URLS}
+      - AUTH_SERVER_URLS=${AUTH_SERVER_URLS}
+      - RESOURCE_API_URLS=${RESOURCE_API_URLS}
 
   auth.server:
     container_name: auth.server
     image: euphoria.auth.server
     build:
       context: .
-      dockerfile: AuthServer/Dockerfile
-    depends_on:
-      - auth.data
-
-  auth.data:
-    container_name: auth.data
-    image: euphoria.auth.mssql
-    build:
-      context: ./AuthServer/SqlData
-      dockerfile: Dockerfile
+      dockerfile: AuthServer/Dockerfile    
+    environment:
+    - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+    - ASPNETCORE_URLS=${AUTH_SERVER_URLS}
+    - SPA_CLIENT_URLS=${SPA_CLIENT_URLS}
+    - AUTH_SERVER_URLS=${AUTH_SERVER_URLS}
+    - RESOURCE_API_URLS=${RESOURCE_API_URLS}
+    - ConnectionStrings__Default=Server=${AUTH_SERVER_SQL_SERVER};Initial Catalog=${AUTH_SERVER_SQL_CATALOG};Persist Security Info=False;User ID=sa;Password=${AUTH_SERVER_SQL_PASSWORD};MultipleActiveResultSets=False;Encrypt=false;TrustServerCertificate=False;
 
   resouce.api:
     container_name: resouce.api
@@ -31,5 +33,12 @@ services:
     build:
       context: .
       dockerfile: Resource.Api/Dockerfile
+    environment:
+    - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+    - ASPNETCORE_URLS=${RESOURCE_API_URLS}
+    - SPA_CLIENT_URLS=${SPA_CLIENT_URLS}
+    - AUTH_SERVER_URLS=${AUTH_SERVER_URLS}
+    - RESOURCE_API_URLS=${RESOURCE_API_URLS}
+    - SPA_CLIENT_BUILD_COMMAND=${SPA_CLIENT_BUILD_COMMAND}
 
   

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import * as process from "process";
  
 @Injectable()
 export class ConfigService {    
@@ -10,12 +9,10 @@ export class ConfigService {
     }
 
     get authApiURI() {
-        var env = process && process.env ? <any>process.env : environment.urls;
-        return env.AUTH_SERVER_URLS + '/api';
+        return environment.urls.AUTH_SERVER_URLS + '/api';
     }    
      
     get resourceApiURI() {
-        var env = process && process.env ? <any>process.env : environment.urls;
-        return env.RESOURCE_API_URLS + '/api';
+        return environment.urls.RESOURCE_API_URLS + '/api';
     }  
 }

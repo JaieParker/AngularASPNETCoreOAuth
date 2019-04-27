@@ -22,7 +22,7 @@ namespace Resource.Api
         public void ConfigureServices(IServiceCollection services)
         {
             // TODO: can this work ?
-            var authServerUrl = Environment.GetEnvironmentVariable("RESOURCE_API_URLS");
+            var authServerUrl = Environment.GetEnvironmentVariable("AUTH_SERVER_URLS");
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

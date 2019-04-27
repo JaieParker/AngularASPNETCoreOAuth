@@ -4,32 +4,24 @@ services:
   spa.client:
     ports:
       - '4200:4200'
-    environment:
-      - SPA_CLIENT_URLS=http://spa.client:4200
-      - AUTH_SERVER_URLS=http://auth.server:5000
-      - RESOURCE_API_URLS=http://resouce.api:5050
 
   auth.server:
+    depends_on:
+        - auth.data
     ports:
       - '5000:5000'
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://auth.server:5000
-      - SPA_CLIENT_URLS=http://spa.client:4200
-      - AUTH_SERVER_URLS=http://auth.server:5000
-      - RESOURCE_API_URLS=http://resouce.api:5050
-      - ConnectionStrings__Default=Server=auth.data;Initial Catalog=euphoria;Persist Security Info=False;User ID=sa;Password=Pass@word1;MultipleActiveResultSets=False;Encrypt=false;TrustServerCertificate=False;
-
+    
   auth.data:
+    container_name: auth.data
+    image: euphoria.auth.mssql
+    build:
+      context: ./AuthServer/SqlData
+      dockerfile: Dockerfile
     environment:
-      - SA_PASSWORD=Pass@word1
+      - SA_PASSWORD=${AUTH_SERVER_SQL_PASSWORD}
       - ACCEPT_EULA=Y
 
   resouce.api:
     ports:
       - '5050:5050'
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - SPA_CLIENT_URLS=http://spa.client:4200
-      - AUTH_SERVER_URLS=http://auth.server:5000
-      - RESOURCE_API_URLS=http://resouce.api:5050
+    

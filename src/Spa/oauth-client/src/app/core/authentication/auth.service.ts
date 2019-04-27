@@ -7,8 +7,6 @@ import { BehaviorSubject } from 'rxjs';
 import { BaseService } from "../../shared/base.service";
 import { ConfigService } from '../../shared/config.service';
 import { environment } from '../../../environments/environment';
-import * as process from "process";
-//declare var process: any;
 
 @Injectable({
   providedIn: 'root'
@@ -63,21 +61,20 @@ export class AuthService extends BaseService  {
 }
 
 export function getClientSettings(): UserManagerSettings {
-  var env = process && process.env ? <any>process.env : environment;
   return {
       //authority: 'http://auth.server:5000',
-      authority: env.AUTH_SERVER_URLS,
+      authority: environment.urls.AUTH_SERVER_URLS,
       client_id: 'angular_spa',
       //redirect_uri: 'http://spa.client:4200/auth-callback',
       //post_logout_redirect_uri: 'http://spa.client:4200/',
-      redirect_uri: env.SPA_CLIENT_URLS + '/auth-callback',
-      post_logout_redirect_uri: env.SPA_CLIENT_URLS + '/',
+      redirect_uri: environment.urls.SPA_CLIENT_URLS + '/auth-callback',
+      post_logout_redirect_uri: environment.urls.SPA_CLIENT_URLS + '/',
       response_type:"id_token token",
       scope:"openid profile email api.read",
       filterProtocolClaims: true,
       loadUserInfo: true,
       automaticSilentRenew: true,
       //silent_redirect_uri: 'http://spa.client:4200/silent-refresh.html'
-      silent_redirect_uri: env.SPA_CLIENT_URLS + '/silent-refresh.html'
+      silent_redirect_uri: environment.urls.SPA_CLIENT_URLS + '/silent-refresh.html'
   };
 }
