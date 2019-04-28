@@ -8,6 +8,14 @@ services:
     build:
       context: .
       dockerfile: Spa/Dockerfile
+      args:
+        - SPA_CLIENT_URLS_ARG=${SPA_CLIENT_URLS}
+        - AUTH_SERVER_URLS_ARG=${AUTH_SERVER_URLS}
+        - RESOURCE_API_URLS_ARG=${RESOURCE_API_URLS}
+        - SPA_CLIENT_URLS_ESCAPED=${SPA_CLIENT_URLS_ESCAPED}
+        - AUTH_SERVER_URLS_ESCAPED=${AUTH_SERVER_URLS_ESCAPED}
+        - RESOURCE_API_URLS_ESCAPED=${RESOURCE_API_URLS_ESCAPED}
+        - SPA_CLIENT_BUILD_COMMAND_ARG=${SPA_CLIENT_BUILD_COMMAND}
     environment:
       - SPA_CLIENT_URLS=${SPA_CLIENT_URLS}
       - AUTH_SERVER_URLS=${AUTH_SERVER_URLS}
@@ -19,13 +27,17 @@ services:
     build:
       context: .
       dockerfile: AuthServer/Dockerfile    
+      args:
+        - SPA_CLIENT_URLS_ARG=${SPA_CLIENT_URLS}
+        - AUTH_SERVER_URLS_ARG=${AUTH_SERVER_URLS}
+        - RESOURCE_API_URLS_ARG=${RESOURCE_API_URLS}
     environment:
-    - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
-    - ASPNETCORE_URLS=${AUTH_SERVER_URLS}
-    - SPA_CLIENT_URLS=${SPA_CLIENT_URLS}
-    - AUTH_SERVER_URLS=${AUTH_SERVER_URLS}
-    - RESOURCE_API_URLS=${RESOURCE_API_URLS}
-    - ConnectionStrings__Default=Server=${AUTH_SERVER_SQL_SERVER};Initial Catalog=${AUTH_SERVER_SQL_CATALOG};Persist Security Info=False;User ID=sa;Password=${AUTH_SERVER_SQL_PASSWORD};MultipleActiveResultSets=False;Encrypt=false;TrustServerCertificate=False;
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=${AUTH_SERVER_URLS}
+      - SPA_CLIENT_URLS=${SPA_CLIENT_URLS}
+      - AUTH_SERVER_URLS=${AUTH_SERVER_URLS}
+      - RESOURCE_API_URLS=${RESOURCE_API_URLS}
+      - ConnectionStrings__Default=Server=${AUTH_SERVER_SQL_SERVER};Initial Catalog=${AUTH_SERVER_SQL_CATALOG};Persist Security Info=False;User ID=sa;Password=${AUTH_SERVER_SQL_PASSWORD};MultipleActiveResultSets=False;Encrypt=false;TrustServerCertificate=False;
 
   resouce.api:
     container_name: resouce.api
@@ -33,12 +45,15 @@ services:
     build:
       context: .
       dockerfile: Resource.Api/Dockerfile
+      args:
+        - SPA_CLIENT_URLS_ARG=${SPA_CLIENT_URLS}
+        - AUTH_SERVER_URLS_ARG=${AUTH_SERVER_URLS}
+        - RESOURCE_API_URLS_ARG=${RESOURCE_API_URLS} 
     environment:
-    - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
-    - ASPNETCORE_URLS=${RESOURCE_API_URLS}
-    - SPA_CLIENT_URLS=${SPA_CLIENT_URLS}
-    - AUTH_SERVER_URLS=${AUTH_SERVER_URLS}
-    - RESOURCE_API_URLS=${RESOURCE_API_URLS}
-    - SPA_CLIENT_BUILD_COMMAND=${SPA_CLIENT_BUILD_COMMAND}
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=${RESOURCE_API_URLS}
+      - SPA_CLIENT_URLS=${SPA_CLIENT_URLS}
+      - AUTH_SERVER_URLS=${AUTH_SERVER_URLS}
+      - RESOURCE_API_URLS=${RESOURCE_API_URLS}    
 
   

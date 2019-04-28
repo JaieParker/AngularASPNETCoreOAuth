@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace AuthServer.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IIdentityServerInteractionService _interaction;
@@ -171,7 +171,7 @@ namespace AuthServer.Controllers
             await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("name", user.Name));
             await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("email", user.Email));
             await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("role", Roles.Consumer));
-            
+
 
             return Ok(new RegisterResponseViewModel(user));
         }

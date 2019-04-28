@@ -1,1 +1,5 @@
 **/node_modules
+**/dist
+**/e2e
+**/.editorconfig
+**/README.md

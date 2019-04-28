@@ -3,7 +3,6 @@ WORKDIR /app
 EXPOSE 5050
 
 FROM microsoft/dotnet:2.2-sdk AS build
-
 # Restore dotnet before build to allow for caching
 WORKDIR /src
 COPY /Resource.Api/Resource.Api/Resource.Api.csproj .

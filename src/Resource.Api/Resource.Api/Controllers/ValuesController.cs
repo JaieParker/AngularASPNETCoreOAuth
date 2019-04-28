@@ -8,7 +8,7 @@ namespace Resource.Api.Controllers
     [Authorize(Policy = "ApiReader")]
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesController : BaseController
     {
         // GET api/values
         [Authorize(Policy = "Consumer")]

@@ -68,6 +68,5 @@ RUN dotnet publish /src/AuthServer/AuthServer.csproj  --no-restore -c Release -o
 # Copy compiled app to runtime container
 FROM base AS final
 COPY --from=build /app .
-
 # consider delay dotnet launch until the db is up
 CMD ["dotnet", "AuthServer.dll"]

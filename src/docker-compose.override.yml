@@ -17,6 +17,8 @@ services:
     build:
       context: ./AuthServer/SqlData
       dockerfile: Dockerfile
+      args:
+      - SA_PASSWORD_ARG=${AUTH_SERVER_SQL_PASSWORD}
     environment:
       - SA_PASSWORD=${AUTH_SERVER_SQL_PASSWORD}
       - ACCEPT_EULA=Y

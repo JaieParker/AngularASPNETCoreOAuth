@@ -1,8 +1,12 @@
 # base image
 FROM nginx:alpine as base
 
+ARG AUTH_SERVER_URLS_ESCAPED
+ARG RESOURCE_API_URLS_ESCAPED
+ARG SPA_CLIENT_URLS_ESCAPED
 COPY /Spa/nginx.conf /etc/nginx/nginx.conf
-RUN sed -i -e "s/http:\/\/spa.client:4200/${AUTH_SERVER_URLS}/" /etc/nginx/nginx.conf
+RUN echo "sed -i -e \"s/SPA_CLIENT_URLS/${SPA_CLIENT_URLS_ESCAPED}/g\" /etc/nginx/nginx.conf"
+RUN sed -i -e "s/SPA_CLIENT_URLS/${SPA_CLIENT_URLS_ESCAPED}/g" /etc/nginx/nginx.conf
 
 FROM node:10 as build
 
@@ -32,20 +36,35 @@ RUN npm install -g @angular/cli@1.7.1
 # add app 
 COPY /Spa/oauth-client .
 
+ARG AUTH_SERVER_URLS_ESCAPED
+ARG RESOURCE_API_URLS_ESCAPED
+ARG SPA_CLIENT_URLS_ESCAPED
+ARG SPA_CLIENT_BUILD_COMMAND_ARG
 # Need to change the config files to utilise the enviroment vars
 # Hacky but works well
-WORKDIR /app/src/enviroments/
-RUN sed -e "s/http:\/\/auth.server:5000/${AUTH_SERVER_URLS}/" -e "s/http:\/\/resouce.api:5050/${RESOURCE_API_URLS}/" -e "s/http:\/\/spa.client:4200/${SPA_CLIENT_URLS}/" enviroment.ts > enviroment.ts
+WORKDIR /app/src/environments/
+RUN sed -i -e "s/http:\/\/auth.server:5000/${AUTH_SERVER_URLS_ESCAPED}/g" \
+        -e "s/http:\/\/resouce.api:5050/${RESOURCE_API_URLS_ESCAPED}/g" \
+        -e "s/http:\/\/spa.client:4200/${SPA_CLIENT_URLS_ESCAPED}/g" \ 
+        environment.ts
+RUN sed -i -e "s/http:\/\/auth.server:5000/${AUTH_SERVER_URLS_ESCAPED}/g" \
+        -e "s/http:\/\/resouce.api:5050/${RESOURCE_API_URLS_ESCAPED}/g" \
+        -e "s/http:\/\/spa.client:4200/${SPA_CLIENT_URLS_ESCAPED}/g" \ 
+        environment.prod.ts        
 
 WORKDIR /app
-ENV SPA_CLIENT_BUILD_COMMAND=build-prod
+
+RUN echo "SPA_CLIENT_BUILD_COMMAND_ARG = ${SPA_CLIENT_BUILD_COMMAND_ARG}"
 # start app
 # CMD ng serve --host 0.0.0.0:4200
-RUN npm run ${SPA_CLIENT_BUILD_COMMAND}
+RUN npm run ${SPA_CLIENT_BUILD_COMMAND_ARG}
 
 # Final container
 FROM base as client
 
 COPY --from=build /app/dist .
+# COPY --from=build /app/src/ /src
 EXPOSE 4200
+EXPOSE 80
+EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]

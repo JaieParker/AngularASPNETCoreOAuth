@@ -1,6 +1,7 @@
 # FOR THE WIN: https://github.com/Microsoft/mssql-docker/issues/347
 FROM microsoft/mssql-server-linux
-ENV SA_PASSWORD=Pass@word1
+ARG SA_PASSWORD_ARG=Pass@word1
+ENV SA_PASSWORD ${SA_PASSWORD_ARG}
 ENV ACCEPT_EULA=Y
 COPY create_db.sql create_db.sql
 RUN (/opt/mssql/bin/sqlservr --accept-eula & ) | grep -q "Service Broker manager has started" && /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Pass@word1' -d master -i create_db.sql

@@ -19,7 +19,7 @@ namespace AuthServer.Controllers
     /// </summary>
     [SecurityHeaders]
     [Authorize]
-    public class ConsentController : Controller
+    public class ConsentController : BaseController
     {
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;

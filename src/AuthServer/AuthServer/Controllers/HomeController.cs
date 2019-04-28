@@ -8,7 +8,7 @@ namespace AuthServer.Controllers
 {
     [SecurityHeaders]
     [AllowAnonymous]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly IHostingEnvironment _environment;
         private readonly ILogger<HomeController> _logger;
